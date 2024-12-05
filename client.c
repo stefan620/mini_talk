@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:02:44 by stefan            #+#    #+#             */
-/*   Updated: 2024/12/04 20:26:47 by stefan           ###   ########.fr       */
+/*   Updated: 2024/12/05 11:27:07 by silic            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
         free(pr);
         i++;
     }
-    printf("%d", pid);
+    printf("%d\n", pid);
 }
 int *code_the_message(int c, int i)
 {
@@ -58,7 +58,6 @@ int *code_the_message(int c, int i)
             ret[j] = 0;
         else 
             ret[j] = 1;
-        // printf("asdsad %d \n", ret[j]);
         j--;
         c = c/2;
     }
@@ -77,7 +76,7 @@ void ft_send_signal(int *arr, pid_t pid, int i)
         else if(arr[j] == 0)
             kill(pid, SIGUSR2);
         j++;
-        sleep(0.5);
+        usleep(500);
     }
 }
 int ft_pid(char *str)
@@ -86,6 +85,7 @@ int ft_pid(char *str)
     int pid;
 
     i = 0;
+    pid = 0;
     while (str[i])
     {
         pid = pid * 10 + str[i] - '0';
@@ -100,7 +100,7 @@ int ft_validation(char *str)
     i = 0;
     while (str[i])
     {
-        if (str[i] < 0 || str[i] > 155)
+        if (str[i] < 0 || str[i] > 126)
             return(0);
         i++;
     }

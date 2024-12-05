@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:07:18 by stefan            #+#    #+#             */
-/*   Updated: 2024/12/04 20:10:10 by stefan           ###   ########.fr       */
+/*   Updated: 2024/12/05 11:26:33 by silic            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int main(void)
     {
         signal(SIGUSR2, just_a_print);
         signal(SIGUSR1, just_a_print);
+        signal(SIGINT, just_a_print);
     }
 }
 void just_a_print(int signum)
@@ -38,6 +39,12 @@ void just_a_print(int signum)
         ft_collect_signl(1);
     else if (signum == 12)
         ft_collect_signl(0);
+    else if (signum == 2)
+    {
+        ft_collect_signl(-1);
+        exit(0);
+    }
+        
 }
 void ft_collect_signl(int sig)
 {
@@ -45,6 +52,11 @@ void ft_collect_signl(int sig)
     static int arr[6];
     
     // printf("sig: %d\n", sig);
+    if (sig == -1)
+    {
+        i = 0;
+        return;
+    }
     if (i > 6)
     {
         ft_decode_signal(arr);
@@ -59,8 +71,6 @@ void ft_collect_signl(int sig)
     {
         arr[i] = 0;
     }
-    // printf("dec1 %d\n", arr[i]);
-    // printf("i: %d \n", i);
     i++; 
 }
 void ft_decode_signal(int *dec)
@@ -74,11 +84,9 @@ void ft_decode_signal(int *dec)
     j = 6;
     while (i != 7)
     {
-        // printf("dec %d\n", dec[i]);
         if (dec[i] == 1)
         {
             ch = ch + ft_power(j);
-            // printf("power: %d\n", ft_power(j));
         }
         j--;
         i++;
@@ -96,10 +104,8 @@ int ft_power(int power)
         return (1);
     while (power > 1)
     {
-        // printf("sa ovim: %d\n", power);
         ret = ret * con;
         power--;
     }
-    // printf("con: %d\n", ret);
     return (ret);
 }
