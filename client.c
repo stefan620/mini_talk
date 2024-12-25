@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
+/*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:02:44 by stefan            #+#    #+#             */
-/*   Updated: 2024/12/05 11:27:07 by silic            ###   ########.fr       */
+/*   Updated: 2024/12/25 17:39:37 by stefan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,94 +15,50 @@
 #include <signal.h>
 #include <stdlib.h> 
 #include <sys/types.h> 
-
-int *code_the_message(int c, int i);
-void reverse_bin(char **str, int j);
-void ft_send_signal(int *arr, pid_t pid, int i);
-int ft_pid(char *str);
-int ft_validation(char *str);
-int main(int argc, char **argv)
+#include "help.h"
+void count_bits(int sig)
 {
-    int *pr;
-    int pid;
+    static int r;
+    r = 0;
+    if (sig == 10)
+       r++;
+    else if (sig == 12)
+    {
+        ft_putstr_fd("end of transmision", 1);
+        exit(0);
+    }
+}
+void code_and_sand(pid_t pid, char *str)
+{
     int i;
+    i = 7;
     int c;
-    
-    i = 0;
-    pid = ft_pid(argv[1]);
-    if (!ft_validation(argv[2]))
-        return(printf("mistake\n"), 0);
-    while (argv[2][i])
+    while (*str)
     {
-        c = argv[2][i];
-        pr = code_the_message(c, i);
-        ft_send_signal(pr, pid, i);
-        free(pr);
-        i++;
-    }
-    printf("%d\n", pid);
-}
-int *code_the_message(int c, int i)
-{
-    int k;
-    int j;
-   
-    int *ret;
-    ret = malloc(7 * sizeof(int));
-    k =0;
-    j = 6;
-    // printf("passed int %c\n",c);
-    while (c != 0)
-    {
-        if (c % 2 == 0)
-            ret[j] = 0;
-        else 
-            ret[j] = 1;
-        j--;
-        c = c/2;
-    }
-    return(ret);
-}
-void ft_send_signal(int *arr, pid_t pid, int i)
-{
-    int j;
-    
-    j = 0;
-    
-    while (j != 8)
-    {   
-        if (arr[j] == 1)
+        while(i != 0)
+        {
+            c = *str;
+            if (c >> 1 & 1) 
+                kill(pid, SIGUSR1);
+            else 
+                kill(pid, SIGUSR2);
+        }
+        i = 7;
+        while (i != 0)
+        {
             kill(pid, SIGUSR1);
-        else if(arr[j] == 0)
-            kill(pid, SIGUSR2);
-        j++;
-        usleep(500);
+            i--;
+        }
+        i = 7;
     }
 }
-int ft_pid(char *str)
+int main (int argc, char **argv)
 {
-    int i;
-    int pid;
-
-    i = 0;
-    pid = 0;
-    while (str[i])
-    {
-        pid = pid * 10 + str[i] - '0';
-        i++;
-    }
-    return(pid);
-}
-int ft_validation(char *str)
-{
-    int i;
-    
-    i = 0;
-    while (str[i])
-    {
-        if (str[i] < 0 || str[i] > 126)
-            return(0);
-        i++;
-    }
-    return(1);
+    if (argc != 3)
+        return(1);
+    signal(SIGUSR1, count_bits);
+    signal(SIGUSR2, count_bits);
+    code_and_sand(ft_atoi(argv[1]), argv[2]);
+    while(1)
+        pause();
 }
