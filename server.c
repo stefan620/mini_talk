@@ -3,109 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
+/*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:07:18 by stefan            #+#    #+#             */
-/*   Updated: 2024/12/05 11:26:33 by silic            ###   ########.fr       */
+/*   Updated: 2024/12/26 17:29:04 by stefan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
-#include <stdlib.h>
-#include <sys/types.h>
+#include <unistd.h>
+void decode_and_print(int sig);
 
-void just_a_print(int signum);
-void ft_decode_signal(int *dec);
-void ft_collect_signl(int sig);
-int ft_power(int power);
-int main(void)
+void signal_handler(int sig, siginfo_t *info, void *context)
 {
-    int i;
-
-    i = getpid();
-    printf("%d\n", i);
-    while (1)
-    {
-        signal(SIGUSR2, just_a_print);
-        signal(SIGUSR1, just_a_print);
-        signal(SIGINT, just_a_print);
-    }
-}
-void just_a_print(int signum)
-{
-    if (signum == 10)
-        ft_collect_signl(1);
-    else if (signum == 12)
-        ft_collect_signl(0);
-    else if (signum == 2)
-    {
-        ft_collect_signl(-1);
-        exit(0);
-    }
-        
-}
-void ft_collect_signl(int sig)
-{
+    (void)context;
+    kill(info->si_pid, SIGUSR1);
+    static int c;
     static int i;
-    static int arr[6];
-    
-    // printf("sig: %d\n", sig);
-    if (sig == -1)
+    if (sig == 10)
     {
+        c |= 1;
+    }
+    else
+    {
+        c |= 0;
+    }
+    i++;
+    if (i == 8)
+    {
+        printf("recived %c\n", c); 
         i = 0;
-        return;
+        c = 0;
     }
-    if (i > 6)
-    {
-        ft_decode_signal(arr);
-        i = 0;
-        return;
-    }
-    if (sig == 1)
-    {
-        arr[i] = 1;
-    }
-    if (sig == 0)
-    {
-        arr[i] = 0;
-    }
-    i++; 
-}
-void ft_decode_signal(int *dec)
-{
-    int i;
-    int j;
-    int ch;
+    // if (c == '\0')
+    //     kill(info->si_pid, SIGUSR2);
+    c <<= 1;
+}    
 
-    ch = 0;
-    i = 0;
-    j = 6;
-    while (i != 7)
-    {
-        if (dec[i] == 1)
-        {
-            ch = ch + ft_power(j);
-        }
-        j--;
-        i++;
-    }
-    printf("%c\n", ch);
-}
-int ft_power(int power)
-{
-    int con;
-    int ret;
 
-    con = 2;
-    ret = 2;
-    if (power == 0)
-        return (1);
-    while (power > 1)
-    {
-        ret = ret * con;
-        power--;
+int main() {
+    struct sigaction sa;
+
+    sa.sa_sigaction = signal_handler;
+    sa.sa_flags = SA_SIGINFO;
+
+    sigemptyset(&sa.sa_mask);
+
+    // Handle SIGUSR1 and SIGUSR2
+    sigaction(SIGUSR1, &sa, NULL);
+    sigaction(SIGUSR2, &sa, NULL);
+
+    printf("PID: %d\n", getpid());
+    printf("Waiting for signals...\n");
+
+    while (1) {
+        pause();
     }
-    return (ret);
+
+    return 0;
 }

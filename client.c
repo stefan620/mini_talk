@@ -6,7 +6,7 @@
 /*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:02:44 by stefan            #+#    #+#             */
-/*   Updated: 2024/12/25 17:39:37 by stefan           ###   ########.fr       */
+/*   Updated: 2024/12/26 17:09:17 by stefan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,36 +21,49 @@ void count_bits(int sig)
     static int r;
     r = 0;
     if (sig == 10)
+    {
+        // ft_putstr_fd("recived\n", 1);
        r++;
+    }
     else if (sig == 12)
     {
         ft_putstr_fd("end of transmision", 1);
         exit(0);
     }
+  
 }
 void code_and_sand(pid_t pid, char *str)
 {
     int i;
-    i = 7;
     int c;
     while (*str)
     {
-        while(i != 0)
+        i = 8;
+        while(i--)
         {
             c = *str;
-            if (c >> 1 & 1) 
+            if (c >> i & 1)
+            {
                 kill(pid, SIGUSR1);
-            else 
+                printf("1\n");
+            }
+            else
+            { 
                 kill(pid, SIGUSR2);
+                printf("0\n");
+            }
+            usleep(500);
         }
-        i = 7;
-        while (i != 0)
-        {
-            kill(pid, SIGUSR1);
-            i--;
-        }
-        i = 7;
+        str++;
     }
+        i = 8;
+        while (i--)
+        {
+            kill(pid, SIGUSR2);
+            usleep(500);
+            printf("0\n");
+        }
+       
 }
 int main (int argc, char **argv)
 {
