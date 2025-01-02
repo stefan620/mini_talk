@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:02:44 by stefan            #+#    #+#             */
-/*   Updated: 2024/12/26 17:09:17 by stefan           ###   ########.fr       */
+/*   Updated: 2025/01/02 19:19:14 by silic            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,14 @@
 #include <stdlib.h> 
 #include <sys/types.h> 
 #include "help.h"
+
 void count_bits(int sig)
 {
     static int r;
     r = 0;
     if (sig == 10)
     {
-        // ft_putstr_fd("recived\n", 1);
+        ft_putstr_fd("recived\n", 1);
        r++;
     }
     else if (sig == 12)
@@ -43,16 +44,10 @@ void code_and_sand(pid_t pid, char *str)
         {
             c = *str;
             if (c >> i & 1)
-            {
                 kill(pid, SIGUSR1);
-                printf("1\n");
-            }
             else
-            { 
                 kill(pid, SIGUSR2);
-                printf("0\n");
-            }
-            usleep(500);
+            usleep(100);
         }
         str++;
     }
@@ -60,8 +55,7 @@ void code_and_sand(pid_t pid, char *str)
         while (i--)
         {
             kill(pid, SIGUSR2);
-            usleep(500);
-            printf("0\n");
+            usleep(100);
         }
        
 }
