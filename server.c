@@ -26,11 +26,8 @@ void	signal_handler(int sig, siginfo_t *info, void *context)
     static int i = 0;
 
     (void)context;
-    kill(info->si_pid, SIGUSR1);
     if (sig == SIGUSR1)
-    {
         c |= 1;
-    }
     c <<= 1;
     i++;
     if (i == 8)
@@ -42,6 +39,7 @@ void	signal_handler(int sig, siginfo_t *info, void *context)
         c = 0;
         i = 0;
     }
+    kill(info->si_pid, SIGUSR1);
 }
 
 int	main(void)
@@ -50,10 +48,13 @@ int	main(void)
 	
 	sa.sa_sigaction = signal_handler;
 	
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
-	printf("PID: %d\n", getpid());
-	printf("Waiting for signals...\n");
+    sa.sa_sigaction = signal_handler;
+    sa.sa_flags = SA_SIGINFO;
+    sigemptyset(&sa.sa_mask);
+    
+    sigaction(SIGUSR1, &sa, NULL);
+    sigaction(SIGUSR2, &sa, NULL);
+    ft_putnbr_fd(getpid(), 1);
 	while (1)
 	{
 		pause();

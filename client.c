@@ -47,7 +47,7 @@ void code_and_sand(pid_t pid, char *str)
                 kill(pid, SIGUSR1);
             else
                 kill(pid, SIGUSR2);
-            usleep(100);
+            usleep(100000);
         }
         str++;
     }
@@ -55,7 +55,7 @@ void code_and_sand(pid_t pid, char *str)
         while (i--)
         {
             kill(pid, SIGUSR2);
-            usleep(100);
+            usleep(100000);
         }
        
 }
