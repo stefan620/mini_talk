@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
+/*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:02:44 by stefan            #+#    #+#             */
-/*   Updated: 2025/01/02 19:19:14 by silic            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:35:06 by stefan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,32 @@
 #include <sys/types.h> 
 #include "help.h"
 
-void count_bits(int sig)
+void count_bits(int sig, siginfo_t *info, void *context)
 {
+    (void)context;
     static int r;
+    int i ;
+    static int a ;
     r = 0;
-    if (sig == 10)
+    if  (a ==0)
+        a = info->si_pid;
+    if(sig == 2)
+    {
+        ft_putstr_fd("\nclient interupted ", 1);
+        i = 0;
+        while (i < 16)
+        {
+            // ft_putstr_fd("sending end of transmision\n", 1);
+            kill(a, SIGUSR2);
+            usleep(100000);
+            i++;
+        }
+        _exit(0); 
+    }
+    else if (sig == 10)
     {
         ft_putstr_fd("recived\n", 1);
-       r++;
+        r++;
     }
     else if (sig == 12)
     {
@@ -63,8 +81,20 @@ int main (int argc, char **argv)
 {
     if (argc != 3)
         return(1);
-    signal(SIGUSR1, count_bits);
-    signal(SIGUSR2, count_bits);
+    if (ft_atoi(argv[1]) < 0)
+    {
+        return(1);
+        ft_putstr_fd("invalid pid\n", 1);
+    }
+    struct sigaction	sa;
+	
+	sa.sa_sigaction = count_bits;
+    sa.sa_flags = SA_SIGINFO;
+    sigemptyset(&sa.sa_mask);
+    
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGUSR1, &sa, NULL);
+    sigaction(SIGUSR2, &sa, NULL);
     code_and_sand(ft_atoi(argv[1]), argv[2]);
     while(1)
         pause();

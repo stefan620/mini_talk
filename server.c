@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
+/*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:07:18 by stefan            #+#    #+#             */
-/*   Updated: 2025/01/02 17:58:38 by silic            ###   ########.fr       */
+/*   Updated: 2025/01/04 18:29:00 by stefan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,11 @@ void	signal_handler(int sig, siginfo_t *info, void *context)
         c >>= 1;
         ft_putchar_fd(c, 1);
         if (c == '\0')
+        {
             kill(info->si_pid, SIGUSR2);
+            ft_putstr_fd("\nend of reciving", 1);
+            ft_putnbr_fd(i, 1);
+        }
         c = 0;
         i = 0;
     }
