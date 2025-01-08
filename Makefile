@@ -3,8 +3,8 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror -g
 
-SRC1 = client.c ft_atoi.c ft_putnbr_fd.c ft_putstr_fd.c ft_putchar_fd.c
-SRC2 = server.c ft_atoi.c ft_putnbr_fd.c ft_putstr_fd.c ft_putchar_fd.c
+SRC1 = client.c ft_atoi.c ft_putnbr_fd.c ft_putstr_fd.c ft_putchar_fd.c ft_memcpy.c
+SRC2 = server.c ft_atoi.c ft_putnbr_fd.c ft_putstr_fd.c ft_putchar_fd.c ft_memcpy.c
 
 
 OUT1 = client
@@ -18,8 +18,10 @@ $(OUT1): $(SRC1)
 
 
 $(OUT2): $(SRC2)
-	$(CC) $(CFLAGS) -o $(OUT2) $(SRC2)
-
 
 clean:
 	rm -f $(OUT1) $(OUT2) 
+fclean: clean
+		rm -f $(OUT1) $(OUT2)
+	
+.PHONY: all clean fclean

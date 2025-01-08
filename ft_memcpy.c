@@ -1,22 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/25 16:53:57 by stefan            #+#    #+#             */
-/*   Updated: 2025/01/08 16:21:12 by silic            ###   ########.fr       */
+/*   Created: 2024/09/03 17:17:03 by silic             #+#    #+#             */
+/*   Updated: 2025/01/08 17:12:24 by silic            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-void	ft_putstr_fd(char *s, int fd)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	while (*s)
+	unsigned char		*dptr;
+	const unsigned char	*sptr;
+
+	sptr = src;
+	dptr = dest;
+	if (!dest && !src)
+		return (0);
+	while (n-- > 0)
 	{
-		write(fd, s, 1);
-		s++;
+		*dptr++ = *sptr++;
 	}
+	return (dest);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	n;
+
+	n = 0;
+	while (str[n])
+	{
+		n++;
+	}
+	return (n);
 }

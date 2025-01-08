@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stefan <stefan@student.42.fr>              +#+  +:+       +#+        */
+/*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/25 16:54:00 by stefan            #+#    #+#             */
-/*   Updated: 2024/12/25 16:54:46 by stefan           ###   ########.fr       */
+/*   Updated: 2025/01/08 16:20:57 by silic            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	ft_putnbr_fd(int n, int fd)
 		crate_str(n, fd);
 	}
 }
+
 /*
 int	main(void)
 {
