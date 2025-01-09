@@ -6,7 +6,7 @@
 /*   By: silic <silic@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 23:07:18 by stefan            #+#    #+#             */
-/*   Updated: 2025/01/08 17:56:12 by silic            ###   ########.fr       */
+/*   Updated: 2025/01/09 15:48:04 by silic            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ static void	extender(char **str, int *j, pid_t pid)
 	ft_putstr_fd(*str, 1);
 	kill(pid, SIGUSR2);
 	(*j) = 0;
-	(*str) = NULL;
 	free(*str);
+	(*str) = NULL;
 }
 
 char	*realocation(char *str)
