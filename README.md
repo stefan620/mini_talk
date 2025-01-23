@@ -15,8 +15,6 @@
 - [Project Highlights](#project-highlights)
 - [Bonus](#bonus)
 - [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
